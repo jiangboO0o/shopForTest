@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.javaweb.shop.dao.GoodsMapper">
+    <resultMap id="BaseResultMap" type="com.javaweb.shop.entity.Goods">
+<!--        主键，数据库字段名，类型，对应实体类元素名-->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+<!--        其他字段-->
+        <result column="goods_id" jdbcType="VARCHAR" property="goodsId"/>
+        <result column="owner_id" jdbcType="VARCHAR" property="ownerId"/>
+        <result column="shop_id" jdbcType="VARCHAR" property="shopId"/>
+        <result column="goods_status" jdbcType="INTEGER" property="goodsStatus"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, goods_id, owner_id, shop_id, goods_status, create_time, update_time
+    </sql>
+    <insert id="insert" parameterType="com.javaweb.shop.entity.Goods">
+        insert into goods (goods_id, owner_id, shop_id, goods_status)
+        values (#{goodsId,jdbcType=VARCHAR}, #{ownerId,jdbcType=VARCHAR},
+        #{shopId,jdbcType=VARCHAR}, #{goodsTime,jdbcType=INTEGER})
+    </insert>
+    <update id="updateByPrimartKey" parameterType="com.javaweb.shop.entity.Goods">
+        update goods
+        <set>
+            <if test="goods_id != null and goods_id !=''">
+                goods_id = #{goodsId,jdbc=VARCHAR},
+            </if>
+            <if test="owner_id != null and owner_id !=''">
+                owner_id = #{ownerId,jdbc=VARCHAR},
+            </if>
+            <if test="shop_id != null and shop_id !=''">
+                shop_id = #{shopId,jdbc=VARCHAR},
+            </if>
+            <if test="goods_status != null">
+                goods_status = #{goodsStatus,jdbc=INTEGER}
+            </if>
+        </set>
+        <where>
+            id = #{id,jdbcType=INTEGER}
+        </where>
+    </update>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete from goods
+        <where>
+            id = #{id,jdbcType=INTEGER}
+        </where>
+    </delete>
+    <select id="selectPage" parameterType="com.javaweb.shop.entity.Goods" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from goods
+        <where>
+            <if test="id != null and id !=''">
+                and id = #{id,jdbcType=INTEGER}
+            </if>
+            <if test="goods_id != null and goods_id !=''">
+                and goods_id = #{goodsId,jdbc=VARCHAR}
+            </if>
+            <if test="owner_id != null and owner_id !=''">
+                and owner_id = #{ownerId,jdbc=VARCHAR}
+            </if>
+            <if test="shop_id != null and shop_id !=''">
+                and shop_id = #{shopId,jdbc=VARCHAR}
+            </if>
+            <if test="goods_status != null">
+                and goods_status = #{goodsStatus,jdbc=INTEGER}
+            </if>
+            <if test="startDate != null and startDate != ''">
+                AND create_time &gt;= str_to_date(concat(#{startDate},' 00:00:00'),'%Y-%m-%d %H:%i:%s')
+            </if>
+            <if test="endDate != null and endDate != ''">
+                AND create_time &lt;= str_to_date(concat(#{endDate},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+            </if>
+        </where>
+        order by create_time DESC
+    </select>
+</mapper>
