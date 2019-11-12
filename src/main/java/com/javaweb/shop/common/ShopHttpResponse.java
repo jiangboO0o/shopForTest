@@ -13,7 +13,7 @@ import java.time.format.DateTimeFormatter;
  * @create: 2019-05-28 14:28
  **/
 @Data
-public final class HttpResponse<T> implements Serializable {
+public final class ShopHttpResponse<T> implements Serializable {
 
     private static final long serialVersionUID = 19981212L;
 
@@ -40,28 +40,32 @@ public final class HttpResponse<T> implements Serializable {
     /**
      * 构造方法
      */
-    private HttpResponse(){}
+    private ShopHttpResponse(){}
 
-    public HttpResponse(String code,String msg){
+    public ShopHttpResponse(String code, String msg){
         this.code = code;
         this.msg = msg;
     }
 
-    public HttpResponse(String code,String msg,T result){
+    public ShopHttpResponse(String code, String msg, T result){
         this.code = code;
         this.msg = msg;
         this.result = result;
     }
 
-    public static <T> HttpResponse<T> success(T result) {
-        return new HttpResponse(RetCode.SUCCESS.getCode(),RetCode.SUCCESS.getMsg(),result);
+    public static <T> ShopHttpResponse success() {
+        return new ShopHttpResponse(RetCode.SUCCESS.getCode(),RetCode.SUCCESS.getMsg());
     }
 
-    public static <T> HttpResponse<T> error(String code,String msg){
-        return new HttpResponse(code,msg);
+    public static <T> ShopHttpResponse success(T result) {
+        return new ShopHttpResponse(RetCode.SUCCESS.getCode(),RetCode.SUCCESS.getMsg(),result);
     }
 
-    public static <T> HttpResponse<T> error(RetCode retCode){
-        return new HttpResponse();
+    public static <T> ShopHttpResponse<T> error(String code, String msg){
+        return new ShopHttpResponse(code,msg);
+    }
+
+    public static <T> ShopHttpResponse<T> error(RetCode retCode){
+        return new ShopHttpResponse();
     }
 }
